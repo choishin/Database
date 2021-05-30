@@ -1,5 +1,10 @@
 package BasicTraining02_3;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 /*
@@ -20,7 +25,8 @@ public class InputData {
 	public static int k40_total_sum;
 	public static int k40_total_avg;
 
-	static Main k40_main = new Main();
+	static Main main = new Main();
+
 
 	InputData(int iPerson) {
 		k40_size = iPerson;
@@ -49,77 +55,149 @@ public class InputData {
 		Date k40_date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 		System.out.printf("%20s\n","성적집계표");
-		System.out.printf("%s %20s %s\n","PAGE :"+ k40_main.k40_page_count,"출력일자 : ",sdf.format(k40_date));
+		System.out.printf("%s %12s %s\n","PAGE :"+ main.page_count,"출력일자 : ",sdf.format(k40_date));
 		System.out.println("============================================");
 		System.out.printf("%2.2s %3s %4s %2s %2s %3.2s %2.2s\n","번호","이름","국어","영어","수학","총점","평균");
 		System.out.println("============================================");
 	}
 
-	void print_mid_Result(int k40_lineCount) { //<-현재페이지 집계를 위한 메소드
-		int k40_mid_total_kor_sum =0;
-		int k40_mid_total_eng_sum =0;
-		int k40_mid_total_mat_sum =0;
-		int k40_mid_total_sum =0;
-		int k40_mid_total_avg =0;
-		if(k40_lineCount%30 == 0) { //lineCount는 각페이지의 마지막 순법 
-			for (int i=k40_lineCount-29; i<k40_lineCount+1; i++) { //29를 뺀 순번부터, 현재 lineCount순번까지
-				k40_mid_total_kor_sum = k40_mid_total_kor_sum + k40_kors[i]; //국어 합계
-				k40_mid_total_eng_sum = k40_mid_total_eng_sum + k40_engs[i]; //영어 합계
-				k40_mid_total_mat_sum = k40_mid_total_mat_sum + k40_mats[i]; //수학 합계
-				k40_mid_total_sum = k40_mid_total_sum + k40_sums[i]; //총 합계
-			
-		}
-		k40_mid_total_avg = k40_mid_total_sum/3;//평균 값
-		System.out.println("============================================");
-		System.out.println("현재페이지");
-		System.out.printf("합계 %7s %4d %4d %4d %5d %4d\n"," ", //합계를 출력
-				k40_mid_total_kor_sum,k40_mid_total_eng_sum,k40_mid_total_mat_sum,k40_mid_total_sum,k40_mid_total_avg);
-		System.out.printf("평균 %7s %4d %4d %4d %5d %4d\n", " ", //평균을 출력
-				k40_mid_total_kor_sum/30,k40_mid_total_eng_sum/30,k40_mid_total_mat_sum/30,k40_mid_total_sum/30,k40_mid_total_avg/30);	
-		}
-		else { // 마지막 데이터가 30개보다 적은 데이터라면
-				//마지막 데이터 순번에서 이전페이지에*30을 곱한 수(즉, 누적숫자)를 빼준 수부터, 마지막 순번까지 
-			for (int i=k40_lineCount-((k40_lineCount-(k40_main.k40_page_count-1)*30))+1; i<k40_lineCount+1; i++) {
-				k40_mid_total_kor_sum = k40_mid_total_kor_sum + k40_kors[i]; //국어 합계
-				k40_mid_total_eng_sum = k40_mid_total_eng_sum + k40_engs[i]; //영어 합계
-				k40_mid_total_mat_sum = k40_mid_total_mat_sum + k40_mats[i]; //수학 합계
-				k40_mid_total_sum = k40_mid_total_sum + k40_sums[i]; //총 합계
-			
-		}
-		k40_mid_total_avg = k40_mid_total_sum/3; //평균 값
-		System.out.println("============================================");
-		System.out.println("현재페이지");
-		System.out.printf("합계 %6s %4d %4d %4d %5d %4d\n"," ",
-				k40_mid_total_kor_sum,k40_mid_total_eng_sum,k40_mid_total_mat_sum,k40_mid_total_sum,k40_mid_total_avg);
-		System.out.printf("평균 %6s %4d %4d %4d %5d %4d\n", " ",
-				//마지막 숫자에서 누적개수를 뺀것 = 남은 데이터 개수 
-				k40_mid_total_kor_sum/((k40_lineCount-(k40_main.k40_page_count-1)*30)),//국어합계/남은 데이터 개수
-				k40_mid_total_eng_sum/((k40_lineCount-(k40_main.k40_page_count-1)*30)),//영어합계/남은 데이터 개수
-				k40_mid_total_mat_sum/((k40_lineCount-(k40_main.k40_page_count-1)*30)),//수학합계/남은 데이터 개수
-				k40_mid_total_sum/((k40_lineCount-(k40_main.k40_page_count-1)*30)), //총 합계/남은 데이터 개수
-				k40_mid_total_avg/((k40_lineCount-(k40_main.k40_page_count-1)*30)));//총 평균 /남은 데이터 개수	
-		}
-	}
-	void printResult(int k40_lineCount) {
-		k40_total_kor_sum = 0;
-		k40_total_eng_sum = 0;
-		k40_total_mat_sum = 0;
-		k40_total_sum =0;
-		k40_total_avg = 0;
-		for(int k40_i=1; k40_i<k40_lineCount+1; k40_i++) {
-			k40_total_kor_sum = k40_total_kor_sum +k40_kors[k40_i];
-			k40_total_eng_sum = k40_total_eng_sum +k40_engs[k40_i];
-			k40_total_mat_sum = k40_total_mat_sum +k40_mats[k40_i];
-			k40_total_sum = k40_total_sum + k40_sums[k40_i];
+	void print_mid_Result(int k40_lineCount) throws ClassNotFoundException, SQLException { //<-현재페이지 집계를 위한 메소드
 
+		int start =((main.page_count-2)*main.result_amount)+1;
+		int end = k40_lineCount;
+
+		Class.forName("com.mysql.cj.jdbc.Driver");  
+		Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.147.18:3306/kopoctc","root" , "kopoctc");  
+		Statement stmt = conn.createStatement(); 
+
+		if ( k40_lineCount%30 == 0 ) {
+			//System.out.println(k40_lineCount);
+			//System.out.println(start);
+			//System.out.println(end);
+
+			String querytxt = String.format("select sum(kor),sum(eng),sum(mat),sum(sum),sum(avg) from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			ResultSet rset = stmt.executeQuery(querytxt);
+
+			while(rset.next()) {
+				System.out.println("============================================");
+				System.out.println("현재페이지");
+
+				System.out.printf("합계 %15d %4d %4d %4d %5d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5)); 
+			}
+
+			querytxt = String.format("select sum(kor)/"+main.result_amount+",sum(eng)/"+main.result_amount+","
+					+ "sum(mat)/"+main.result_amount+",sum(sum)/"+main.result_amount+",sum(avg)/"+main.result_amount+" from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			rset = stmt.executeQuery(querytxt);
+			while(rset.next()) {
+				System.out.printf("평균 %15d %4d %4d %4d %5d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5));	
+			}
 		}
-		k40_total_avg = k40_total_sum/3;
-		System.out.println("============================================");
-		System.out.println("누적페이지");
-		System.out.printf("합계 %5s %5d %5d %5d %5d %5d\n"," ",
-				k40_total_kor_sum,k40_total_eng_sum,k40_total_mat_sum,k40_total_sum,k40_total_avg);
-		System.out.printf("평균 %6s %4d %5d %5d %5d %5d\n", " ",
-				k40_total_kor_sum/(k40_lineCount),k40_total_eng_sum/(k40_lineCount),k40_total_mat_sum/(k40_lineCount),
-				k40_total_sum/(k40_lineCount),k40_total_avg/(k40_lineCount));		
+
+		else  {
+
+			start = main.iPerson-(main.iPerson-((main.page_count-1)*main.result_amount))+1;
+			end = k40_lineCount;
+
+			String querytxt = String.format("select sum(kor),sum(eng),sum(mat),sum(sum),sum(avg) from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			ResultSet rset = stmt.executeQuery(querytxt);
+
+			while(rset.next()) {
+				System.out.println("============================================");
+				System.out.println("현재페이지");
+
+				System.out.printf("합계 %15d %4d %4d %4d %4d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5)); 
+			}
+
+			querytxt = String.format("select sum(kor)/"+(main.iPerson-((main.page_count-1)*main.result_amount))+",sum(eng)/"+(main.iPerson-((main.page_count-1)*main.result_amount))+","
+					+ "sum(mat)/"+(main.iPerson-((main.page_count-1)*main.result_amount))+",sum(sum)/"+(main.iPerson-((main.page_count-1)*main.result_amount))+",sum(avg)/"+main.result_amount+" from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			rset = stmt.executeQuery(querytxt);
+			while(rset.next()) {
+				System.out.printf("평균 %15d %4d %4d %4d %4d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5));	
+			}
+		}
+
+	}
+	
+	void printResult(int k40_lineCount) throws SQLException, ClassNotFoundException {
+		int start =0;
+		int end = k40_lineCount;
+
+		Class.forName("com.mysql.cj.jdbc.Driver");  
+		Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.147.18:3306/kopoctc","root" , "kopoctc");  
+		Statement stmt = conn.createStatement(); 
+
+		if ( k40_lineCount%30 == 0 ) {
+			System.out.println(k40_lineCount);
+			System.out.println(start);
+			System.out.println(end);
+
+			String querytxt = String.format("select sum(kor),sum(eng),sum(mat),sum(sum),sum(avg) from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			ResultSet rset = stmt.executeQuery(querytxt);
+
+			while(rset.next()) {
+				System.out.println("============================================");
+				System.out.println("누적페이지");
+
+				System.out.printf("합계 %15d %4d %4d %4d %4d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5)); 
+			}
+
+			querytxt = String.format("select sum(kor)/"+k40_lineCount+",sum(eng)/"+k40_lineCount+","
+					+ "sum(mat)/"+k40_lineCount+",sum(sum)/"+k40_lineCount+",sum(avg)/"+k40_lineCount+" from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			rset = stmt.executeQuery(querytxt);
+			while(rset.next()) {
+				System.out.printf("평균 %15d %5d %5d %5d %5d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5));	
+			}
+		}
+
+		else  {
+
+			start = 0;
+			end = k40_lineCount;
+			System.out.println(k40_lineCount);
+			System.out.println(start);
+			System.out.println(end);
+
+			String querytxt = String.format("select sum(kor),sum(eng),sum(mat),sum(sum),sum(avg) from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			ResultSet rset = stmt.executeQuery(querytxt);
+
+			while(rset.next()) {
+				System.out.println("============================================");
+				System.out.println("누적페이지");
+
+				System.out.printf("합계 %15d %4d %4d %4d %5d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5)); 
+			}
+
+			querytxt = String.format("select sum(kor)/"+k40_lineCount+",sum(eng)/"+k40_lineCount+","
+					+ "sum(mat)/"+k40_lineCount+",sum(sum)/"+k40_lineCount+",sum(avg)/"+k40_lineCount+" from scoreTable "
+					+ "where number >="+start+" and number <="+end+";");
+			rset = stmt.executeQuery(querytxt);
+			while(rset.next()) {
+				System.out.printf("평균 %15d %5d %5d %5d %5d \n",
+						rset.getInt(1), rset.getInt(2), rset.getInt(3), 
+						rset.getInt(4), rset.getInt(5));	
+			}
+		
+		}
 	}
 }

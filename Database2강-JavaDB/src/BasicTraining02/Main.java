@@ -16,7 +16,7 @@ public class Main {
 
 		Class.forName("com.mysql.cj.jdbc.Driver");  //(1)JDBC 라이브러리를 불러온다.
 													//(2)MYSQL에 연결한다
-		Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.23.98:3306/kopoctc","root" , "kopoctc");  
+		Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.147.18:3306/kopoctc","root" , "kopoctc");  
 		Statement stmt = conn.createStatement(); 	//(3)MYSQL을 실행한다.
 													//(4)MYSQL내에서 실행할 명령문 입력
 		stmt.execute("create table scoreTable("
