@@ -1,0 +1,9 @@
+update tupyo set kiho = replace (kiho, '1','나연');
+update tupyo set kiho = replace (kiho, '2','정연');
+update tupyo set kiho = replace (kiho, '3','모모');
+update tupyo set kiho = replace (kiho, '4','사나');
+update tupyo set kiho = replace (kiho, '5','지효');
+update tupyo set kiho = replace (kiho, '6','미나');
+update tupyo set kiho = replace (kiho, '7','다현');
+update tupyo set kiho = replace (kiho, '8','채영');
+update tupyo set kiho = replace (kiho, '9','쯔위');
