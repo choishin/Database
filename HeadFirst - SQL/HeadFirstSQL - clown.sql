@@ -81,12 +81,45 @@ insert activities(activity) select distinct substring_index(activities,',',-1) f
 -- clown_info --∈ info_activities ∋-- activities 
 drop table info_activities;
 create table info_activities (
-clown_idx int,
-activity_id int,
+clown_idx int not null,
+activity_id int not null,
 foreign key(clown_idx) references clown_info (clown_idx),
 foreign key(activity_id) references activities (activity_id)
 );
 
-alter table clown_info 
-add column 
+select * from clown_info;
+select * from activities;
+select * from info_activities;
 
+-- 쉽게 넣을 방법이 분명 있을 텐데... 우선 일일히 하나씩 넣음
+insert into info_activities value(10,8);
+-- join문으로 확인하기 (어떤 광대가 어떤 activity를 할 수 있나)
+select a.clown_idx, a.name, b.activity_id from clown_info as a, info_activities as b where a.clown_idx = b.clown_idx; 
+
+
+drop table info_location;
+create table info_location (
+	id int not null,
+    location_id int not null,
+    time_info datetime,
+    constraint clown_info_clown_idx_fk
+	foreign key(id) references clown_info(clown_idx),
+    constraint location_location_id_fk
+    foreign key(location_id) references location(location_id)
+    );
+    
+drop table location;
+create table location (
+location_id int not null auto_increment,
+location varchar(100),
+primary key (location_id)
+);
+
+insert location(location) select distinct last_seen from clown_info;
+insert info_location(id,location_id) select a.clown_idx, b.location_id from clown_info as a, location as b where a.last_seen = b.location; 
+
+select * from clown_info;
+select * from info_location;
+select * from location; 
+
+select * from clown_info as a, info_location as b where a.clown_idx = b.id;
