@@ -115,7 +115,6 @@ create table info_location (
     time_info datetime,
     constraint clown_info_clown_idx_fk
 	foreign key(clown_idx) references clown_info(clown_idx) ON DELETE CASCADE ON UPDATE CASCADE,
-    constraint location_location_id_fk
     foreign key(location_id) references location(location_id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
@@ -135,7 +134,7 @@ add foreign key (location_id) references location (location_id) ON DELETE CASCAD
 
 -- 장소 정보 데이터 넣기
 insert location(location) select distinct last_seen from clown_info;
-insert info_location(id,location_id) select a.clown_idx, b.location_id from clown_info as a, location as b where a.last_seen = b.location; 
+insert info_location(clown_idx,location_id) select a.clown_idx, b.location_id from clown_info as a, location as b where a.last_seen = b.location; 
 
 -- 데이터 잘 들어갔나 확인하기
 select * from clown_info;
@@ -180,7 +179,6 @@ create table info_appearance (
 	clown_idx int not null,
     appearance_id int not null,
     foreign key(clown_idx) references clown_info(clown_idx),
-	constraint appearances_appearance_id_fk
 	foreign key(appearance_id) references appearances(appearance_id)
 );
 
@@ -191,7 +189,7 @@ alter table info_appearance
 add foreign key (appearance_id) references appearances (appearance_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
--- appearance 문자열 잘라서 넣기
+-- appearance 문자열 잘라서 apperances에 넣기
 select distinct substring_index(substring_index(appearance,',',2),',',-1) from clown_info;
 insert appearances(appearance) select distinct substring_index(substring_index(appearance,',',2),',',-1) from clown_info;
 -- 중간의 문자열 가져오기
@@ -201,6 +199,15 @@ insert appearances(appearance) select distinct substring_index(substring_index(a
 select distinct substring_index(substring_index(appearance,',',4),',',-1) from clown_info;
 insert appearances(appearance) select distinct substring_index(substring_index(appearance,',',4),',',-1) from clown_info;
 select * from clown_info;
+
+--  info_appearance에 데이터 넣기
+-- 쉽게 넣을 수 있는 방법을 아주 많이 고민했음
+-- 1. 새로운 컬럼을 만들어서 쪼개서 넣은 후 한번에 insert select 하기 <- 안 됨
+-- 2. procedure로 loop안에 넣고 하나씩 넣기 <- 2중 for문을 지원하지 않음
+-- 3. dual from where not exists 이용해서 해보려고 함 <- 안 됨
+select appearance_id from appearances where appearance='pointy nose';
+delete from appearances where appearance_id = 39;
+insert into info_appearance(clown_idx,appearance_id) values (10,25);
 
 --  데이터 잘 쪼개서 들어갔나 확인 하기
 select * from clown_info;
@@ -213,9 +220,12 @@ select * from info_appearance;
 select * from location;
 select * from info_location;
 
-
-insert into info_appearance(clown_idx,appearance_id) values (1,1);
-select * from clown_info; 
+-- 만일 광대의 성별을 조회하고 싶다면
+select a.clown_idx, b.sex from clown_info as a, info_sex as b where a.clown_idx = b.clown_idx;
+-- 만일 광대의 외양을 조회하고 싶다면
+select a.clown_idx, b.appearance_id, (select c.appearance from appearances as c where b.appearance_id = c.appearance_id) from clown_info as a, info_appearance as b where a.clown_idx = b.clown_idx;
+-- 만일 광대의 위치를 조회하고 싶다면 
+select a.clown_idx, b.location_id, (select c.location from location as c where b.location_id = c. location_id) from clown_info as a, info_location as b where a.clown_idx = b.clown_idx;
 
 -- 마지막으로 clown_info에서 따로 빼준 컬럼은 지워준다.
 alter table clown_info
@@ -223,3 +233,7 @@ drop column last_seen;
 
 alter table clown_info
 drop column activities;
+
+alter table clown_info
+drop column appearance;
+
