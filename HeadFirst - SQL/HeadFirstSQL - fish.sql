@@ -6,6 +6,7 @@ create table fish_info (
     weight varchar(100) not null
 );
 
+-- 이 테이블은 주소지와 주이름이 붙어있다.
 insert into fish_info values ('bass,largemouth','M.salmoides','Montgomery Lake,GA','22 lb 4 oz');
 insert into fish_info values ('walleye','S.vitres','Old Hockory Lake,TN','25 lb 0 oz');
 insert into fish_info values ('trout,cutthroat','O.Clarki','Pyramid Lake,NV','41 lb 0 oz');
@@ -27,7 +28,7 @@ create table fish_records (
     weight varchar(100),
     date varchar(100)
 );
-
+-- 이 테이블에는 주소지와 주이름 뿐만 아니라 고기를 잡은 사람의 이름과 성도 따로 나뉘어져있다.
 insert into fish_records values ('George','Perry','bass, largemouth', 'Montgomery Lake', 'GA','22 lb 4 oz', date_format('1932/6/2','%m/%d/%Y'));
 insert into fish_records values ('Mabry','Harper','Walleye', 'Old Hockory Lake', 'TN','25 lb 0 oz', date_format('1960/8/2','%m/%d/%Y'));
 insert into fish_records values ('John','Skimmerhorn','trout,cutthroat', 'Pyramid Lake', 'NV','41 lb 0 oz', date_format('1925/12/1','%m/%d/%Y'));
@@ -39,6 +40,9 @@ insert into fish_records values ('Mike','Berg','pickerel,grass', 'Dewart Lake', 
 insert into fish_records values ('Florentino','Abena','goldfish', 'Lake Hodges', 'CA','6 lb 10 oz', date_format('1996/4/17','%m/%d/%Y'));
 insert into fish_records values ('Les','Anderson','salmon,chinook', 'Kenai River', 'AK','97 lb 4 oz', date_format('1985/5/17','%m/%d/%Y'));
 
+
+-- 무엇이 더 낫다고는 할 수 없다. -> 이 데이터를 어떻게 사용할 것인지에 달린 문제이기 때문에
+-- 하지만 데이터를 원자화 하는 것은 추후의 데이터 관리를 위해서라도 중요함.
 select * from fish_info where location like'%NJ';
 select * from fish_records where state='NJ';
 
