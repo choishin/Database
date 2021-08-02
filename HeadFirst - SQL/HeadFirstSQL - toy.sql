@@ -50,6 +50,7 @@ create table toys (
     primary key (toy_id,toy,color)
 );
 
+desc toys;
 -- 기존 테이블에서 필요한 데이터 뽑아서 넣기
 select b.toy_id, a.toy, b.color from toy_tmp as a, toys_tmp as b where a.toy_id = b.toy_id;
 insert toys(toy_id, toy, color) select b.toy_id, a.toy, b.color from toy_tmp as a, toys_tmp as b where a.toy_id = b.toy_id;
@@ -78,10 +79,9 @@ drop table toy_store_relation;
 create table toy_store_relation (
 	toy_id int not null,
     store_id int not null,
-    color varchar(20) not null,
+    color varchar(10) not null,
     inventory int not null,
     foreign key (toy_id) references toys(toy_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    foreign key (color) references toys(color) ON UPDATE CASCADE ON DELETE CASCADE,
     foreign key (store_id) references store(store_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	primary key(toy_id,color,store_id)
 );
@@ -98,7 +98,7 @@ add constraint store_store_id_pk foreign key (store_id) references store(store_i
 
 -- 기존 테이블에서 필요한 데이터 뽑아서 넣기
 select * from toys_tmp;
-insert toy_store_relation select toy_id, store_id,inventory from toys_tmp;
+insert toy_store_relation select toy_id, store_id, color, inventory from toys_tmp;
 
 -- PRIMARY KEY 제약 조건을 설정하면, 해당 필드는 NOT NULL과 UNIQUE 제약 조건의 특징을 모두 가집니다.
 -- 따라서 이 제약 조건이 설정된 필드는 NULL 값을 가질 수 없으며, 또한 중복된 값을 가져서도 안 됩니다.
@@ -120,5 +120,7 @@ select * from toy_store_relation;
 insert into toy_store_relation value(7,1,'white',1);
 delete from toy_store_relation where toy_id =7 and inventory =1;
 
--- 해결 !! 1. 부모테이블에 Constraint 조건을 넣음, 2. 자식테이블에는 references만 함 <- 이렇게 해도 잘 됨. 그리고 foreign key들을 Primary key로 지정
+-- 해결 !! 1. 부모테이블에 Constraint 조건을 넣음, 
+-- 2. 자식테이블에는 references만 함 <- 이렇게 해도 잘 됨. 
+-- 3.SET foreign_key_checks =0; <-이걸 해준 이후라서 foreign key가 힘을 못 쓴 것!
 
