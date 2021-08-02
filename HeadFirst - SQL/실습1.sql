@@ -29,10 +29,12 @@ foreign key (st_val, en_val, validate_dt, expire_dt) references rate_info (st_va
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+
+
 -- pk를 연결을 해두지 않으면 관계가 성립이 안 됨.
 
 insert into rate_info values (1,1,1,1,1,1);
-insert into charge(st_val, en_val,validate_dt,expire_dt,foreign_rate_val, foreign_unit_val,discount_rate) value (2,1,1,1,1,1,1);
+insert into charge(st_val, en_val,validate_dt,expire_dt,foreign_rate_val, foreign_unit_val,discount_rate) value (2,2,1,1,1,1,1);
 select * from charge;
 select * from rate_info;
 desc rate_info;

@@ -43,7 +43,7 @@ drop table toys;
 create table toys (
 	toy_id int not null,
     toy varchar(20) not null,
-    color varchar(20) not null,
+    color varchar(10) not null,
     weight float,
     cost float,
 	constraint pk_toy_id_toy_color
@@ -117,7 +117,8 @@ select * from store;
 select * from toy_store_relation;
 
 -- 의문...분명 제약조건을 넣었는데, 부모테이블에 없는 값도 잘 들어감...
-insert into toy_store_relation value(7,1,1);
+insert into toy_store_relation value(7,1,'white',1);
 delete from toy_store_relation where toy_id =7 and inventory =1;
 
+-- 해결 !! 1. 부모테이블에 Constraint 조건을 넣음, 2. 자식테이블에는 references만 함 <- 이렇게 해도 잘 됨. 그리고 foreign key들을 Primary key로 지정
 
