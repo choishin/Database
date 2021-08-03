@@ -151,6 +151,12 @@ select a.first_name, a.last_name, b._status from my_contacts as a, _status as b 
 -- mycontacts에 있는 각 사람의 이름(first_name), 성(last_name) 그리고 주(state)를 반환하는 쿼리 
 select a.first_name, a.last_name, b.state from my_contacts as a, zip_code as b where a.zip_code = b.zip_code; 
 
+-- my_contacts에 있는 각 사람의 이메일 주소와 직업을 반환하는 쿼리
+select my_contacts.email, my_contacts.zip_code, zip_code.city,zip_code.state from my_contacts Inner Join zip_code on my_contacts.zip_code = zip_code.zip_code;
 
+-- my_contacts에 있는 각 사람의 이름, 성 그리고 그 사람의 결혼여부가 아닌 결혼여부를 반환하는 쿼리
+select my_contacts.last_name, my_contacts.first_name, _status._status from my_contacts Inner Join _status on my_contacts.status_id <> _status.status_id;
 
+-- my_contacts에 있는 각 사람의 이름,성 그리고 주를 반환하는 쿼리
+select my_contacts.last_name, my_contacts.first_name, zip_code.state from my_contacts Inner Join zip_code on my_contacts.zip_code = zip_code.zip_code;
 
