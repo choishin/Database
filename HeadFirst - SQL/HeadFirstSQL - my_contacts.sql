@@ -157,14 +157,14 @@ insert into contact_interest values (1,10);
 insert into contact_interest values (1,9);
 insert into contact_interest values (1,11);
 
-insert into my_contacts values (2,'Paul', 'Singh','5555558222','ps@tikibeanlounge.com','M',date_format('1980-10-12','%Y-%m-%d'),7,1014,2);
+insert into my_contacts values (2,'Paul', 'Singh','5555558222','ps@tikibeanlounge.com','M',date_format('1980-10-12','%Y-%m-%d'),9,1013,2);
 select * from my_contacts where contact_id = 1;
 select * from profession where profession='chef';
 select * from interests where interest='cooking';
 insert into contact_interest values (2,12);
 insert into contact_interest values (2,13);
 
-insert into my_contacts values (3,'Tara', 'Baldwin','5555553432','tara@breakneckpizza.com','F',date_format('1970-1-9','%Y-%m-%d'),8,1014,2);
+insert into my_contacts values (3,'Tara', 'Baldwin','5555553432','tara@breakneckpizza.com','F',date_format('1970-1-9','%Y-%m-%d'),10,1014,2);
 insert into contact_interest values (3,7);
 insert into contact_interest values (3,14);
 insert into contact_interest values (3,11);
@@ -190,3 +190,50 @@ select my_contacts.last_name, my_contacts.first_name, _status._status from my_co
 -- my_contacts에 있는 각 사람의 이름,성 그리고 주를 반환하는 쿼리
 select my_contacts.last_name, my_contacts.first_name, zip_code.state from my_contacts Inner Join zip_code on my_contacts.zip_code = zip_code.zip_code;
 
+
+-- 그렉이 직업소개업에 뛰어들었습니다!
+-- 현재의 직업 job_current(contact_id, title,salary,start_date)
+-- 원하는 직업 job_desired(contact_id, title,salary_low,salary_high,available,years_exp)
+-- 소개할 직업 job_listings(job_id,title,salary,zip,_description)
+
+drop table job_current;
+create table job_current (
+	contact_id int not null,
+    title varchar(20) not null,
+    salary int,
+    start_date date,
+	constraint pk_contact_id
+    primary key (contact_id),
+    constraint fk_contact_id
+    foreign key (contact_id) references my_contacts(contact_id)
+);
+
+drop table job_desired;
+create table job_desired (
+	contact_id int not null,
+    title varchar(20) not null,
+    salary_low int,
+    salary_high int,
+    available char(1),
+    years_exp int,
+	constraint pk_contact_id
+    primary key (contact_id),
+	constraint fk_contact_id2
+    foreign key (contact_id) references my_contacts(contact_id)
+);
+
+drop table job_listings;
+create table job_listings (
+	job_id int not null,
+    title varchar(20) not null,
+    salary int,
+    zip varchar(20),
+    description longtext,
+	constraint pk_job_id
+    primary key (job_id)
+);
+select * from my_contacts;
+
+-- 웹개발자를 찾는다. 5년이상경력에 105,000 이하의 연봉을 요구하는 웹 개발자를 찾는 쿼리를 찾아라
+select a.contact_id, b.title, b.salary_low, b.available, b.years_exp from job_current as a, job_desired as b
+where b.title = 'developer' and b.salary_low = 105000 and b.available = 'y'and b.years_exp >=5;
