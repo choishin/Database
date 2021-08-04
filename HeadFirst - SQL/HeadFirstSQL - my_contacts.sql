@@ -105,6 +105,9 @@ insert into profession(profession) values ('teacher');
 insert into profession(profession) values ('lawyer');
 insert into profession(profession) values ('lancher');
 insert into profession(profession) values ('veterinarian');
+insert into profession(profession) values ('Artist');
+insert into profession(profession) values ('Professor');
+insert into profession(profession) values ('Chef');
 insert into interests(interest) values ('books');
 insert into interests(interest) values ('pets');
 insert into interests(interest) values ('sports');
@@ -113,8 +116,16 @@ insert into interests(interest) values ('horseback');
 insert into interests(interest) values ('movies');
 insert into interests(interest) values ('mystery novels');
 insert into interests(interest) values ('hiking');
+insert into interests(interest) values ('Sailing');
+insert into interests(interest) values ('Cooking');
+insert into interests(interest) values ('dogs');
+insert into interests(interest) values ('spelunking');
+insert into interests(interest) values ('reading');
 insert into zip_code values(1010, 'Austin','TX');
 insert into zip_code values(1011, 'Round Rock','TX');
+insert into zip_code values(1012, 'Salt Lake City','UT');
+insert into zip_code values(1013, 'New york city','NY');
+insert into zip_code values(1014, 'Boston','MA');
 
 -- 나이젤의 데이터 넣어보기
 insert into my_contacts values(341, 'Moore','Nigel','5552311111','nigelmoore@ranchersrule.com','M', date_format('1975-08-28','%Y-%m-%d'),4,1010,1);
@@ -124,7 +135,6 @@ insert into contact_interest values (341,7);
 select * from interests where interest = 'movies'; 
 select * from seeking;
 insert into contact_seeking values (341,2);
-
 
 -- 데이터 조회 해보기
 select * from my_contacts;
@@ -138,8 +148,28 @@ insert into contact_interest value(1854,7);
 insert into contact_interest value(1854,5);
 insert into contact_interest value(1854,8);
 insert into contact_interest value(1854,9);
-select * from seeking;
 insert into contact_seeking values (1854,1);
+
+-- 아래에 있는 세포스트잇의 정보가 테이블 내에 있다고 가장하고 결과 테이블이 어떠한 모습일지 그려보세요.
+insert into my_contacts values (1,'Joan', 'Everett','5555559870','jeverette@mightygumball.net','F',date_format('1978-03-04','%Y-%m-%d'),6,1012,1);
+select * from interests where interest='cooking';
+insert into contact_interest values (1,10);
+insert into contact_interest values (1,9);
+insert into contact_interest values (1,11);
+
+insert into my_contacts values (2,'Paul', 'Singh','5555558222','ps@tikibeanlounge.com','M',date_format('1980-10-12','%Y-%m-%d'),7,1014,2);
+select * from my_contacts where contact_id = 1;
+select * from profession where profession='chef';
+select * from interests where interest='cooking';
+insert into contact_interest values (2,12);
+insert into contact_interest values (2,13);
+
+insert into my_contacts values (3,'Tara', 'Baldwin','5555553432','tara@breakneckpizza.com','F',date_format('1970-1-9','%Y-%m-%d'),8,1014,2);
+insert into contact_interest values (3,7);
+insert into contact_interest values (3,14);
+insert into contact_interest values (3,11);
+
+select mc.last_name, mc.first_name,p.profession from my_contacts as mc INNER JOIN profession as p ON mc.prof_id = p.profession_id;
 
 -- 동등조인 예제
 -- mycontacts에 있는 각 사람의 이메일 주소와 직업을 반환하는 쿼리 
