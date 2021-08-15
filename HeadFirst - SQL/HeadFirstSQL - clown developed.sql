@@ -117,9 +117,10 @@ select * from clown_info2;
 -- 각 광대의 이름과 보스 광대의 이름을 포함한 결과 테이블을 가져오는 하나의 조인을 작성하세요.
 select c1.id, c1.name, c2.name from clown_info1 c1 LEFT OUTER JOIN clown_info2 c2 ON c1.boss_id = c2.id;
 
+-- 만일 광대이름:보스이름 이렇게 나타내고 싶다면 : 우리는 셀프조인이 필요합니다. (boss_id와 id가 같은곳에 대신 이름을 넣는다.)
+select c1.name, c2.name as boss from clown_info1 c1 INNER JOIN clown_info2 c2 ON c1.boss_id = c2.id;
 
-
-
-
+--  서브쿼리로 같은 결과를 내고 싶다면?
+select c1.name,(select name from clown_info2 c2 where c1.boss_id =c2.id) as boss from clown_info1 c1; 
 
 
