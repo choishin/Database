@@ -31,7 +31,7 @@ create table job_desired (
 
 drop table job_listings;
 create table job_listings (
-	job_id int not null auto_increment,
+	job_id int not null,
     title varchar(20) not null,
     salary int,
     zip varchar(20),
@@ -45,26 +45,33 @@ select * from my_contacts;
 select a.contact_id, b.title, b.salary_low, b.available, b.years_exp from job_current as a, job_desired as b
 where b.title = 'developer' and b.salary_low = 105000 and b.available = 'y'and b.years_exp >=5;
 
+-- 더미데이터 입력
+
+insert into profession(profession) values('Hair dresser');
+insert into profession(profession) values('Waiter');
+insert into profession(profession) values('Web Designer');
+insert into profession(profession) values('Web Developer');
+
 insert into job_current(contact_id,title) select m.contact_id, p.profession from my_contacts m LEFT OUTER JOIN profession p ON m.prof_id = p.profession_id;
-insert into job_listings(title) values('Cook');
-insert into job_listings(title) values('Hairdresser');
-insert into job_listings(title) values('Waiter');
-insert into job_listings(title) values('Web Designer');
-insert into job_listings(title) values('Web Developer');
+insert into job_listings(job_id,title) select * from profession where profession='Chef';
+insert into job_listings(job_id,title) select * from profession where profession='Hair dresser';
+insert into job_listings(job_id,title) select * from profession where profession='Waiter';
+insert into job_listings(job_id,title) select * from profession where profession='Web Designer';
+insert into job_listings(job_id,title) select * from profession where profession='Web Developer';
+
+update job_current set salary=12000 where contact_id = 1;
+update job_current set salary=20000 where contact_id = 2;
+update job_current set salary=18000 where contact_id = 3;
+update job_current set salary=17000 where contact_id = 341;
+update job_current set salary=25000 where contact_id = 1854;
+
+insert into job_desired(contact_id, title, salary_low, salary_high) values(2, 'Chef', 20000, 22000);
 
 select * from profession;
 select * from job_listings;
 select * from job_desired;
 select * from job_current;
 select * from my_contacts;
-
--- 더미데이터 입력
-update job_current set salary=12000 where contact_id = 1;
-update job_current set salary=20000 where contact_id = 2;
-update job_current set salary=18000 where contact_id = 3;
-update job_current set salary=17000 where contact_id = 341;
-update job_current set salary=25000 where contact_id = 1854;
-insert into job_desired(contact_id, title, salary_low, salary_high) values(2, 'Chef', 20000, 22000);
 
 -- union : 아래  컬럼을 다 합친 결과를 보여줌. (단, 데이터 타입이 같아야 하고, 찾고자 하는 컬럼수가 같아야함 (여기선 title 한개로 동일))
 select title from job_current
@@ -128,5 +135,4 @@ select title from job_current order by salary desc limit 1;
 
 -- 평균 연봉보다 많은 연봉인 사람의 이름과 성을 나열하세요.
 select mc.contact_id, mc.last_name, mc.first_name from my_contacts mc, job_current jc where jc.contact_id = mc.contact_id and jc.salary >= (select avg(salary) from job_current);
-
 
