@@ -1,7 +1,7 @@
 <h1>MySQL 쿼리 공부</h1><br>
-Database2강 - Java와 DB연동 <br>
-Database3,4강- Procedure, Function | select, inset, update, delete 쿼리 실습 | select in select, Join 실습<br>
-HeadFirstSQL <br>
+<h2>Database2강</h2> - Java와 DB연동 <br>
+<h2>Database3,4강</h2>- Procedure, Function | select, inset, update, delete 쿼리 실습 | select in select, Join 실습<br>
+<h2>HeadFirstSQL</h2><br>
   ① 데이터와 테이블 - 모든 정보는 여기에 <br>
   ② select문 - 데이터 가져오기의 축복 <br>
   ③ delete와 update - 바꾸면 나아질 거에요 <br>
