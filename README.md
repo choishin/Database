@@ -1,4 +1,4 @@
-<h1>MySQL 쿼리 공부</h1><br>
+<h1>MySQL 쿼리 공부</h1>
 <h2>Database2강</h2> - Java와 DB연동 <br>
 <h2>Database3,4강</h2>- Procedure, Function | select, inset, update, delete 쿼리 실습 | select in select, Join 실습<br>
 <h2>HeadFirstSQL</h2><br>
